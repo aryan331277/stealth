@@ -14,70 +14,121 @@ def real_calculator():
             .split-screen {
                 display: flex;
                 height: 100vh;
+                gap: 10px;
             }
             .calculator-pane {
                 width: 60%;
                 padding: 20px;
                 background: #f0f2f6;
+                border-radius: 15px;
             }
             .emergency-pane {
                 width: 40%;
                 padding: 20px;
-                background: #ffebee;
+                background: #ffd4d4;
                 border-left: 3px solid #ff4444;
                 display: none;
+                border-radius: 15px;
+                box-shadow: -5px 0 15px rgba(255,0,0,0.1);
             }
             .emergency-visible {
                 display: block !important;
                 animation: slideIn 0.5s forwards;
             }
             @keyframes slideIn {
-                from { transform: translateX(100%); }
-                to { transform: translateX(0); }
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
             .stButton > button {
                 width: 100%;
-                height: 50px;
-                font-size: 20px;
-                border-radius: 10px;
+                height: 60px;
+                font-size: 24px;
+                border-radius: 12px;
                 border: 2px solid #2d5f2d;
                 background-color: #4CAF50;
                 color: white !important;
-                transition: 0.3s;
+                transition: all 0.2s;
+                margin: 2px;
             }
             .stButton > button:hover {
                 background-color: #45a049;
                 transform: scale(1.05);
+                box-shadow: 0 3px 8px rgba(0,0,0,0.2);
             }
-            .emotion-meter {
-                background: white;
+            .stButton > button:focus {
+                background-color: #3d8b40;
+            }
+            .calculator-display {
+                font-size: 32px;
                 padding: 15px;
-                border-radius: 10px;
-                margin: 10px 0;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                text-align: right;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+                margin-bottom: 15px;
+                border: 2px solid #cccccc;
             }
             .police-message {
                 background: #ffe6e6;
                 border-left: 4px solid #ff4444;
                 padding: 15px;
-                margin: 10px 0;
-                border-radius: 5px;
-                font-size: 0.9em;
+                margin: 15px 0;
+                border-radius: 8px;
+                font-size: 0.95em;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .message-header {
                 color: #ff4444;
-                font-weight: bold;
-                margin-bottom: 5px;
+                font-weight: 700;
+                margin-bottom: 8px;
+                font-size: 1.1em;
             }
             .message-time {
-                font-size: 0.8em;
+                font-size: 0.85em;
                 color: #666;
+                margin-bottom: 5px;
             }
-            .audio-container {
-                background: white;
+            .emotion-meter {
+                background: #ffffff;
                 padding: 15px;
-                border-radius: 10px;
+                border-radius: 8px;
                 margin: 10px 0;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .emotion-meter progress {
+                width: 100%;
+                height: 20px;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            .emotion-meter progress::-webkit-progress-bar {
+                background-color: #eee;
+                border-radius: 10px;
+            }
+            .emotion-meter progress::-webkit-progress-value {
+                background-color: #ff4444;
+                border-radius: 10px;
+            }
+            .emergency-alert {
+                color: #ff4444;
+                font-size: 1.5em;
+                font-weight: 700;
+                text-align: center;
+                margin: 15px 0;
+                animation: pulse 1s infinite;
+            }
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+            .section-title {
+                color: #333;
+                font-size: 1.3em;
+                font-weight: 600;
+                margin: 15px 0 10px;
+                border-bottom: 2px solid #ff4444;
+                padding-bottom: 5px;
             }
         </style>
     """, unsafe_allow_html=True)
