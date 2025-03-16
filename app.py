@@ -52,7 +52,6 @@ def real_calculator():
     col1, col2 = st.columns(2)
     if col1.button("Clear"):
         st.session_state["expression"] = ""
-        st.rerun()
     if col2.button("="):
         try:
             # Safely evaluate the expression
@@ -60,7 +59,6 @@ def real_calculator():
             st.session_state["expression"] = str(result)
         except Exception as e:
             st.error("Invalid Expression")
-        st.rerun()
     
     # Calculator buttons
     buttons = [
@@ -81,7 +79,6 @@ def real_calculator():
                     # Update expression safely
                     current_expr = st.session_state["expression"]
                     st.session_state["expression"] = current_expr + char
-                st.rerun()
 
 def main():
     st.title("Stealth UI Demo")
