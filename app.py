@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import time
 from datetime import datetime
+from streamlit_mic_recorder import mic_recorder
 
 def real_calculator():
     st.markdown("""
@@ -72,16 +73,24 @@ def real_calculator():
                 font-size: 0.8em;
                 color: #666;
             }
+            .audio-container {
+                background: white;
+                padding: 15px;
+                border-radius: 10px;
+                margin: 10px 0;
+            }
         </style>
     """, unsafe_allow_html=True)
 
     # Initialize session state
     if "emergency" not in st.session_state:
-        st.session_state.emergency = False
-    if "police_comms" not in st.session_state:
-        st.session_state.police_comms = []
-    if "expression" not in st.session_state:
-        st.session_state.expression = ""
+        st.session_state.update({
+            "emergency": False,
+            "police_comms": [],
+            "expression": "",
+            "audio_data": None,
+            "audio_analysis": None
+        })
 
     # Split screen container
     st.markdown('<div class="split-screen">', unsafe_allow_html=True)
@@ -135,11 +144,73 @@ def real_calculator():
         if st.session_state.emergency:
             st.error("🚨 EMERGENCY MODE ACTIVATED 🚨")
             
-            # Police communication panel
+            # Voice recording section
+            with st.expander("Voice Message to Police", expanded=True):
+                st.write("**Record Emergency Message**")
+                
+                # Audio recorder component
+                audio_data = mic_recorder(
+                    start_prompt="🎤 Start Recording",
+                    stop_prompt="⏹️ Stop Recording",
+                    key="emergency_recorder"
+                )
+                
+                # Store and analyze audio
+                if audio_data and audio_data['bytes']:
+                    st.session_state.audio_data = audio_data['bytes']
+                    
+                    with st.spinner("Analyzing voice message..."):
+                        time.sleep(2)
+                        st.session_state.audio_analysis = {
+                            "Fear": np.random.randint(75, 95),
+                            "Stress": np.random.randint(80, 95),
+                            "Urgency": np.random.randint(85, 98),
+                            "Calm": np.random.randint(5, 20)
+                        }
+                
+                # Show analysis results
+                if st.session_state.audio_analysis:
+                    st.write("### Voice Analysis Results")
+                    for emotion, value in st.session_state.audio_analysis.items():
+                        st.markdown(f"""
+                            <div class="emotion-meter">
+                                <strong>{emotion}:</strong>
+                                <progress value="{value}" max="100"></progress> {value}%
+                            </div>
+                        """, unsafe_allow_html=True)
+                    
+                    # Send button
+                    if st.button("🚨 Send Voice Analysis to Police"):
+                        lat, lon = np.random.uniform(-90, 90), np.random.uniform(-180, 180)
+                        analysis_time = datetime.now().strftime("%H:%M:%S")
+                        
+                        new_msg = {
+                            "time": analysis_time,
+                            "content": f"""
+                                <div>
+                                    <strong>VOICE ANALYSIS ALERT:</strong>
+                                    <ul>
+                                        <li>📍 Location: {lat:.4f}°N, {lon:.4f}°E</li>
+                                        <li>😨 Fear: {st.session_state.audio_analysis['Fear']}%</li>
+                                        <li>😰 Stress: {st.session_state.audio_analysis['Stress']}%</li>
+                                        <li>🚨 Urgency: {st.session_state.audio_analysis['Urgency']}%</li>
+                                    </ul>
+                                    <audio controls style="width: 100%; margin-top: 10px;">
+                                        <source src="data:audio/wav;base64,{st.session_state.audio_data.decode('latin-1')}" type="audio/wav">
+                                    </audio>
+                                </div>
+                            """
+                        }
+                        st.session_state.police_comms.append(new_msg)
+                        st.success("Voice analysis sent to police!")
+                        st.session_state.audio_data = None
+                        st.session_state.audio_analysis = None
+                        st.rerun()
+
+            # Police communications
             with st.expander("Police Communications", expanded=True):
                 st.subheader("Officer Dispatch Updates")
                 
-                # Show existing messages
                 for msg in st.session_state.police_comms:
                     st.markdown(f"""
                         <div class="police-message">
@@ -148,61 +219,6 @@ def real_calculator():
                             {msg['content']}
                         </div>
                     """, unsafe_allow_html=True)
-
-                # New analysis transmission
-                if st.button("Send Live Analysis to Police", key="send_alert"):
-                    with st.spinner("Transmitting emergency data..."):
-                        # Generate fake data
-                        lat, lon = np.random.uniform(-90, 90), np.random.uniform(-180, 180)
-                        emotions = {
-                            "Fear": np.random.randint(70, 90),
-                            "Stress": np.random.randint(65, 85),
-                            "Confusion": np.random.randint(50, 75)
-                        }
-                        analysis_time = datetime.now().strftime("%H:%M:%S")
-                        
-                        # Create message
-                        new_msg = {
-                            "time": analysis_time,
-                            "content": f"""
-                                <div>
-                                    <strong>Live Analysis Update:</strong>
-                                    <ul>
-                                        <li>📍 Location: {lat:.4f}°N, {lon:.4f}°E</li>
-                                        <li>😨 Fear: {emotions['Fear']}%</li>
-                                        <li>😰 Stress: {emotions['Stress']}%</li>
-                                        <li>😵 Confusion: {emotions['Confusion']}%</li>
-                                    </ul>
-                                </div>
-                            """
-                        }
-                        st.session_state.police_comms.append(new_msg)
-                        time.sleep(1)
-                        st.rerun()
-
-            # Voice analysis section
-            with st.expander("Real-Time Voice Analysis", expanded=True):
-                st.write("**Live Emotion Detection**")
-                
-                if st.button("Analyze Voice Stress"):
-                    with st.spinner("Processing voice input..."):
-                        time.sleep(2)
-                        
-                        emotions = {
-                            "Fear": np.random.randint(70, 90),
-                            "Stress": np.random.randint(65, 85),
-                            "Confusion": np.random.randint(50, 75),
-                            "Calm": np.random.randint(10, 30)
-                        }
-                        
-                        st.write("### Emotional State Metrics")
-                        for emotion, value in emotions.items():
-                            st.markdown(f"""
-                                <div class="emotion-meter">
-                                    <strong>{emotion}:</strong>
-                                    <progress value="{value}" max="100"></progress> {value}%
-                                </div>
-                            """, unsafe_allow_html=True)
 
             # Location tracking
             st.write("### Live Location Tracking")
