@@ -39,37 +39,49 @@ def real_calculator():
     <div class="calculator-container">
         <h2>Stealth Calculator</h2>
     </div>
-    
     """, unsafe_allow_html=True)
     
+    # Initialize session state
     if "expression" not in st.session_state:
-        st.session_state.expression = ""
+        st.session_state["expression"] = ""
     
-    expression = st.text_input("", value=st.session_state.expression, key="expression")
+    # Display current expression in a text box
+    st.text_input("", value=st.session_state["expression"], key="expression_display", disabled=True)
     
+    # Clear and equals buttons at the top
+    col1, col2 = st.columns(2)
+    if col1.button("Clear"):
+        st.session_state["expression"] = ""
+        st.rerun()
+    if col2.button("="):
+        try:
+            # Safely evaluate the expression
+            result = eval(st.session_state["expression"])
+            st.session_state["expression"] = str(result)
+        except Exception as e:
+            st.error("Invalid Expression")
+        st.rerun()
+    
+    # Calculator buttons
     buttons = [
         ('7', '8', '9', '/'),
         ('4', '5', '6', '*'),
         ('1', '2', '3', '-'),
-        ('0', '.', '=', '+')
+        ('0', '.', 'q', '+')
     ]
     
     for row in buttons:
         cols = st.columns(4)
         for i, char in enumerate(row):
             if cols[i].button(char):
-                if char == '=':
-                    try:
-                        result = eval(st.session_state.expression)
-                        st.session_state.expression = str(result)
-                    except:
-                        st.error("Invalid Expression")
-                elif char == 'q':
-                    st.session_state.expression = ""
+                if char == 'q':
+                    st.session_state["expression"] = ""
                     st.warning("Emergency Mode Activated!")
                 else:
-                    st.session_state.expression += char
-                st.experimental_rerun()
+                    # Update expression safely
+                    current_expr = st.session_state["expression"]
+                    st.session_state["expression"] = current_expr + char
+                st.rerun()
 
 def main():
     st.title("Stealth UI Demo")
