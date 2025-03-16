@@ -130,6 +130,34 @@ def real_calculator():
                 border-bottom: 2px solid #ff4444;
                 padding-bottom: 5px;
             }
+                    .emotion-meter {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: #000000; /* Force black text */
+        }
+        .emotion-meter strong {
+            color: #000000 !important; /* Ensure emotion labels are black */
+        }
+        .emotion-meter progress {
+            width: 100%;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .emotion-meter progress::-webkit-progress-bar {
+            background-color: #eee;
+            border-radius: 10px;
+        }
+        .emotion-meter progress::-webkit-progress-value {
+            background-color: #ff4444;
+            border-radius: 10px;
+        }
+        .emotion-meter div {
+            color: #000000 !important; /* Ensure percentage text is black */
+        }
         </style>
     """, unsafe_allow_html=True)
 
