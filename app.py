@@ -1,9 +1,5 @@
 import streamlit as st
-import random
 import numpy as np
-
-def fake_tax_screenshot():
-    return "Fake Tax Calculation: ₹{}".format(random.randint(1000, 99999))
 
 def real_calculator():
     st.markdown("""
@@ -16,25 +12,40 @@ def real_calculator():
                 border: none;
                 background-color: #4CAF50;
                 color: white;
+                transition: 0.3s;
             }
             .stButton > button:hover {
                 background-color: #45a049;
+                transform: scale(1.05);
             }
             .calculator-container {
                 padding: 20px;
                 border-radius: 15px;
                 background-color: #f8f9fa;
-                box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+                box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
+                text-align: center;
+            }
+            .expression-box {
+                font-size: 24px;
+                padding: 10px;
+                text-align: right;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+                margin-bottom: 10px;
             }
         </style>
     
     <div class="calculator-container">
-        <h3 style="text-align: center;">Real Calculator</h3>
+        <h2>Stealth Calculator</h2>
     </div>
     
     """, unsafe_allow_html=True)
     
-    expression = st.text_input("Enter expression:", key="expression")
+    if "expression" not in st.session_state:
+        st.session_state.expression = ""
+    
+    expression = st.text_input("", value=st.session_state.expression, key="expression")
     
     buttons = [
         ('7', '8', '9', '/'),
@@ -53,39 +64,16 @@ def real_calculator():
                         st.session_state.expression = str(result)
                     except:
                         st.error("Invalid Expression")
+                elif char == 'q':
+                    st.session_state.expression = ""
+                    st.warning("Emergency Mode Activated!")
                 else:
                     st.session_state.expression += char
                 st.experimental_rerun()
 
-def emergency_ui():
-    st.markdown("""
-        <style>
-            .emergency-container {
-                padding: 20px;
-                border-radius: 15px;
-                background-color: #ffdddd;
-                box-shadow: 2px 2px 10px rgba(255,0,0,0.2);
-            }
-        </style>
-    
-    <div class="emergency-container">
-        <h3 style="text-align: center; color: red;">Emergency Mode</h3>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.write("Fake Tax Calculation Screenshot:")
-    st.info(fake_tax_screenshot())
-    st.button("Trigger SOS Alert", help="Send an emergency alert!")
-
 def main():
     st.title("Stealth UI Demo")
-    mode = st.radio("Select Mode", ["Real Calculator", "Emergency Mode"], horizontal=True)
-    
-    if mode == "Real Calculator":
-        real_calculator()
-    else:
-        emergency_ui()
+    real_calculator()
 
 if __name__ == "__main__":
     main()
-
