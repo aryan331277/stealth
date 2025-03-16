@@ -205,7 +205,7 @@ def real_calculator():
                         st.success("Voice analysis sent to police!")
                         st.session_state.audio_data = None
                         st.session_state.audio_analysis = None
-                        st.rerun()
+                         
 
             # Police communications
             with st.expander("Police Communications", expanded=True):
