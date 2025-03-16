@@ -2,20 +2,21 @@ import streamlit as st
 
 def real_calculator():
     st.markdown("""
-        <style>
+                <style>
             .stButton > button {
                 width: 100%;
                 height: 50px;
                 font-size: 20px;
                 border-radius: 10px;
-                border: none;
+                border: 2px solid #2d5f2d;
                 background-color: #4CAF50;
-                color: white;
+                color: white !important;  /* Force white text */
                 transition: 0.3s;
             }
             .stButton > button:hover {
                 background-color: #45a049;
                 transform: scale(1.05);
+                color: white !important;  /* Ensure text stays visible on hover */
             }
             .calculator-container {
                 padding: 20px;
@@ -34,7 +35,6 @@ def real_calculator():
                 margin-bottom: 10px;
             }
         </style>
-    
     
     <div class="calculator-container">
         <h2>Stealth Calculator</h2>
