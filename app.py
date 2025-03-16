@@ -3,8 +3,38 @@ import streamlit as st
 def real_calculator():
     st.markdown("""
         <style>
-            /* ... (keep existing styles the same) ... */
+            .stButton > button {
+                width: 100%;
+                height: 50px;
+                font-size: 20px;
+                border-radius: 10px;
+                border: none;
+                background-color: #4CAF50;
+                color: white;
+                transition: 0.3s;
+            }
+            .stButton > button:hover {
+                background-color: #45a049;
+                transform: scale(1.05);
+            }
+            .calculator-container {
+                padding: 20px;
+                border-radius: 15px;
+                background-color: #f8f9fa;
+                box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
+                text-align: center;
+            }
+            .expression-box {
+                font-size: 24px;
+                padding: 10px;
+                text-align: right;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+                margin-bottom: 10px;
+            }
         </style>
+    
     
     <div class="calculator-container">
         <h2>Stealth Calculator</h2>
